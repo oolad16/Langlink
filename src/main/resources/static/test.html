@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>LangLink Demo - Create User</title>
+</head>
+<body>
+<h1>Create User (Demo)</h1>
+
+<label>Name:</label>
+<input type="text" id="name" required />
+<br><br>
+
+<label>Email:</label>
+<input type="email" id="email" required />
+<br><br>
+
+<button onclick="createUser()">Create User</button>
+
+<p id="result"></p>
+
+<script>
+    async function createUser() {
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+
+        if (!name || !email) {
+            document.getElementById("result").innerText = "Please fill in both fields.";
+            return;
+        }
+
+        const res = await fetch("/users", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email })
+        });
+
+        if (!res.ok) {
+            document.getElementById("result").innerText = "Error: " + res.status;
+            return;
+        }
+
+        const saved = await res.json();
+        document.getElementById("result").innerText =
+            "Saved! ID: " + saved.id + " | " + saved.name + " | " + saved.email;
+    }
+</script>
+</body>
+</html>
