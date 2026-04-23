@@ -172,14 +172,14 @@
             <p>Meet people to practise languages nearby</p>
         </div>
     </div>
-    <span class="pill">Prototype • Customer view</span>
+    <span class="pill">Prototype</span>
 </header>
 
 <section class="container">
     <!-- LEFT -->
     <div class="card">
         <h2>Create account</h2>
-        <p>Create your profile. For the demo, you “sign in” using your User ID.</p>
+        <p>Create a profile to use the app.</p>
 
         <div class="grid2">
             <div>
@@ -209,7 +209,7 @@
         <div class="divider"></div>
 
         <h2>Sign in</h2>
-        <p class="small">Demo login: enter your User ID (shown after account creation).</p>
+        <p class="small">Enter your User ID to continue.</p>
         <div class="row" style="width:100%">
             <div style="flex:1; min-width: 220px;">
                 <label for="loginUserId">Your User ID</label>
@@ -228,7 +228,7 @@
     <!-- RIGHT -->
     <div class="card">
         <h2>My dashboard</h2>
-        <p>Signed-in users only see their own profile + matches.</p>
+        <p>View your profile, find matches, and chat.</p>
 
         <div class="row">
             <span class="badge" id="signedInBadge">Not signed in</span>
@@ -239,7 +239,7 @@
         <div class="divider"></div>
 
         <h2>Find matches</h2>
-        <p class="small">Matches are based on native/target language pairing.</p>
+        <p class="small">Matches are based on language pairing.</p>
         <div class="row" style="width:100%">
             <button class="btn-primary" id="findMatchesBtn">Find matches</button>
             <button class="btn-ghost" id="clearMatchesBtn">Clear</button>
@@ -251,11 +251,11 @@
         <div class="divider"></div>
 
         <h2>Chat</h2>
-        <p class="small">Demo chat: pick a match by ID, load conversation, send messages.</p>
+        <p class="small">Enter a match ID to load messages.</p>
 
         <div class="row" style="width:100%">
             <div style="flex:1; min-width: 220px;">
-                <label for="chatWithId">Chat with (Match User ID)</label>
+                <label for="chatWithId">Chat with (User ID)</label>
                 <input id="chatWithId" placeholder="e.g. 3" />
             </div>
             <div style="align-self:flex-end">
@@ -279,12 +279,11 @@
             </div>
         </div>
 
-        <!-- Admin tools (testing only) -->
         <details>
-            <summary>Admin tools (testing only)</summary>
+            <summary>Admin tools</summary>
             <div class="divider"></div>
 
-            <h2>Users (testing)</h2>
+            <h2>Users</h2>
             <div class="row">
                 <button class="btn-ghost" id="refreshUsersBtn">Refresh users</button>
             </div>
@@ -332,9 +331,7 @@
     function updateAuthUI(){
         const userId = getSignedInUserId();
         $("signedInBadge").textContent = userId ? `Signed in as User ${userId}` : "Not signed in";
-        $("authStatus").textContent = userId
-            ? "Signed in. Use Matches and Chat for the demo."
-            : "Sign in to use the dashboard.";
+        $("authStatus").textContent = userId ? "Signed in." : "Please sign in.";
     }
 
     async function apiGet(url){
@@ -401,8 +398,8 @@
             const newId = created.id ?? created.userId ?? "";
 
             $("createStatus").textContent =
-                newId ? `Account created. Your User ID is ${newId}. Enter it in “Sign in”.`
-                    : "Account created. If you don’t see an ID, open Admin tools > Refresh users.";
+                newId ? `Account created. Your User ID is ${newId}.`
+                    : "Account created.";
 
             $("createStatus").className = "status ok";
 
@@ -422,7 +419,7 @@
     $("loginBtn").addEventListener("click", () => {
         const id = Number($("loginUserId").value);
         if(!Number.isFinite(id) || id <= 0){
-            $("authStatus").textContent = "Enter a valid numeric User ID.";
+            $("authStatus").textContent = "Enter a valid User ID.";
             return;
         }
         setSignedIn(id);
@@ -443,12 +440,12 @@
     $("loadMeBtn").addEventListener("click", async () => {
         $("meStatus").textContent = "";
         const userId = getSignedInUserId();
-        if(!userId){ $("meStatus").textContent = "Please sign in first."; return; }
+        if(!userId){ $("meStatus").textContent = "Sign in first."; return; }
 
         try{
             const users = await apiGet("/users");
             const me = users.find(u => Number(u.id) === Number(userId));
-            if(!me){ $("meStatus").textContent = `Could not find User ${userId}.`; return; }
+            if(!me){ $("meStatus").textContent = `User ${userId} not found.`; return; }
             $("meStatus").textContent = `Profile: ${renderPublicUser(me)}`;
             $("meStatus").className = "status ok";
         } catch(e){
@@ -457,12 +454,12 @@
         }
     });
 
-    //  Find matches
+    // ===== Find matches =====
     $("findMatchesBtn").addEventListener("click", async () => {
         $("matchesStatus").textContent = "";
         $("matchesList").innerHTML = "";
         const userId = getSignedInUserId();
-        if(!userId){ $("matchesStatus").textContent = "Please sign in first."; return; }
+        if(!userId){ $("matchesStatus").textContent = "Sign in first."; return; }
 
         try{
             let matches = null;
@@ -473,13 +470,12 @@
             }
 
             if(!Array.isArray(matches) || matches.length === 0){
-                $("matchesStatus").textContent = "No matches found yet. Create another user with a compatible pair.";
+                $("matchesStatus").textContent = "No matches found yet.";
                 return;
             }
 
             matches.forEach(u => {
                 const li = document.createElement("li");
-                // Show safe info, but include ID subtly for chat input
                 li.textContent = `${renderPublicUser(u)} (Match ID: ${u.id})`;
                 $("matchesList").appendChild(li);
             });
@@ -498,7 +494,7 @@
         $("matchesStatus").className = "status";
     });
 
-    // ===== Chat (NEW) =====
+    // ===== Chat =====
     let currentChatPartnerId = null;
 
     async function loadConversation(){
@@ -509,14 +505,14 @@
         const other = Number($("chatWithId").value);
 
         if(!me){ $("chatStatus").textContent = "Sign in first."; return; }
-        if(!Number.isFinite(other) || other <= 0){ $("chatStatus").textContent = "Enter a valid Match User ID."; return; }
+        if(!Number.isFinite(other) || other <= 0){ $("chatStatus").textContent = "Enter a valid User ID."; return; }
 
         currentChatPartnerId = other;
 
         try{
             const messages = await apiGet(`/chat/conversation?user1=${me}&user2=${other}`);
             if(!Array.isArray(messages) || messages.length === 0){
-                $("chatStatus").textContent = "No messages yet — send the first message.";
+                $("chatStatus").textContent = "No messages yet.";
                 return;
             }
 
@@ -543,7 +539,6 @@
                 $("chatBox").appendChild(wrapper);
             });
 
-            // scroll to bottom
             $("chatBox").scrollTop = $("chatBox").scrollHeight;
             $("chatStatus").textContent = "Conversation loaded.";
             $("chatStatus").className = "status ok";
@@ -565,7 +560,7 @@
         const text = $("chatMessage").value.trim();
 
         if(!me){ $("chatStatus").textContent = "Sign in first."; return; }
-        if(!Number.isFinite(other) || other <= 0){ $("chatStatus").textContent = "Enter a valid Match User ID."; return; }
+        if(!Number.isFinite(other) || other <= 0){ $("chatStatus").textContent = "Enter a valid User ID."; return; }
         if(!text){ $("chatStatus").textContent = "Type a message first."; return; }
 
         try{
@@ -579,7 +574,6 @@
             $("chatStatus").textContent = "Message sent.";
             $("chatStatus").className = "status ok";
 
-            // refresh conversation
             await loadConversation();
         } catch(e){
             $("chatStatus").textContent = `Send failed: ${e.message}`;
@@ -587,7 +581,6 @@
         }
     });
 
-    // allow Enter to send
     $("chatMessage").addEventListener("keydown", async (e) => {
         if(e.key === "Enter"){
             e.preventDefault();
@@ -595,7 +588,7 @@
         }
     });
 
-    // ===== Admin tools (testing) =====
+    // ===== Admin tools =====
     $("refreshUsersBtn").addEventListener("click", async () => {
         $("usersStatus").textContent = "";
         $("usersList").innerHTML = "";
@@ -634,5 +627,3 @@
 </script>
 </body>
 </html>
-
-
