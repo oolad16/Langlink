@@ -1,10 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>LangLink – Create Account</title>
+    <style>
+        :root{
+            --bg:#fff7ef;--card:#ffffff;--text:#1f2937;--muted:#6b7280;
+            --border:#f1d2b7;--orange:#f97316;--orange2:#fb923c;
+            --danger:#b91c1c;--ok:#047857;
+        }
+        *{box-sizing:border-box}
+        body{
+            margin:0;
+            font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+            background:radial-gradient(1200px 600px at 15% 0%,rgba(249,115,22,.18),transparent 60%),
+            radial-gradient(1000px 600px at 90% 10%,rgba(251,146,60,.14),transparent 55%),
+            var(--bg);
+            color:var(--text);
+            min-height:100vh;
+            display:flex;align-items:flex-start;justify-content:center;padding:32px 16px;
+        }
+        .wrap{width:100%;max-width:480px;}
+        .brand{text-align:center;margin-bottom:24px;}
+        .logo{
+            width:52px;height:52px;border-radius:14px;margin:0 auto 12px;
+            background:linear-gradient(135deg,var(--orange),var(--orange2));
+            box-shadow:0 10px 24px rgba(249,115,22,.25);
+        }
+        .brand h1{margin:0;font-size:28px;}
+        .brand p{margin:4px 0 0;color:var(--muted);font-size:13px;}
+        .card{
+            background:var(--card);border:1px solid var(--border);
+            border-radius:18px;box-shadow:0 10px 30px rgba(31,41,55,.10);padding:28px;
+        }
+        .card h2{margin:0 0 6px;font-size:20px;}
+        .card .sub{margin:0 0 18px;color:var(--muted);font-size:13px;}
+        .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+        @media(max-width:480px){.grid2{grid-template-columns:1fr;}}
+        .field{margin-top:14px;}
+        label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;}
+        input,select,textarea{
+            width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);
+            outline:none;font-size:14px;background:#fff;font-family:inherit;
+        }
+        textarea{resize:vertical;min-height:80px;}
+        input:focus,select:focus,textarea:focus{
+            border-color:rgba(249,115,22,.65);box-shadow:0 0 0 4px rgba(249,115,22,.12);
+        }
+        .divider{height:1px;background:rgba(241,210,183,.8);margin:20px 0;}
+        button.btn{
+            width:100%;margin-top:22px;padding:13px;border:0;cursor:pointer;
+            border-radius:12px;font-weight:700;font-size:15px;
+            background:linear-gradient(135deg,var(--orange),var(--orange2));
+            color:white;box-shadow:0 10px 22px rgba(249,115,22,.22);
+        }
+        .status{margin-top:12px;font-size:13px;color:var(--muted);min-height:18px;}
+        .status.err{color:var(--danger);}
+        .status.ok{color:var(--ok);font-weight:700;}
+        .foot{text-align:center;margin-top:16px;font-size:13px;color:var(--muted);}
+        .foot a{color:var(--orange);text-decoration:none;font-weight:600;}
+        .req{color:var(--orange);}
+    </style>
 </head>
 <body>
-$END$
+<div class="wrap">
+    <div class="brand">
+        <div class="logo"></div>
+        <h1>LangLink</h1>
+        <p>Meet people to practise languages nearby</p>
+    </div>
+    <div class="card">
+        <h2>Create your account</h2>
+        <p class="sub">Fields marked <span class="req">*</span> are required.</p>
+
+        <div class="grid2">
+            <div class="field">
+                <label>Name <span class="req">*</span></label>
+                <input id="name" placeholder="e.g. Alex"/>
+            </div>
+            <div class="field">
+                <label>Email <span class="req">*</span></label>
+                <input id="email" type="email" placeholder="you@example.com"/>
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Password <span class="req">*</span> <span style="font-weight:normal">(min. 6 characters)</span></label>
+            <input id="password" type="password" placeholder="Choose a secure password"/>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="grid2">
+            <div class="field">
+                <label>Native language <span class="req">*</span></label>
+                <input id="nativeLanguage" placeholder="e.g. English"/>
+            </div>
+            <div class="field">
+                <label>Learning <span class="req">*</span></label>
+                <input id="targetLanguage" placeholder="e.g. Spanish"/>
+            </div>
+        </div>
+
+        <div class="grid2">
+            <div class="field">
+                <label>Proficiency level</label>
+                <select id="proficiency">
+                    <option value="">– Select –</option>
+                    <option>Beginner</option>
+                    <option>Elementary</option>
+                    <option>Intermediate</option>
+                    <option>Upper-Intermediate</option>
+                    <option>Advanced</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Your area / city</label>
+                <input id="location" placeholder="e.g. Leicester, London"/>
+            </div>
+        </div>
+
+        <div class="field">
+            <label>About you <span style="font-weight:normal">(optional bio)</span></label>
+            <textarea id="bio" placeholder="Tell people a bit about yourself and your language goals…"></textarea>
+        </div>
+
+        <button class="btn" id="registerBtn">Create account</button>
+        <div class="status" id="status"></div>
+    </div>
+    <div class="foot">
+        Already have an account? <a href="/login.html">Sign in</a>
+    </div>
+</div>
+<script>
+    document.getElementById('registerBtn').addEventListener('click', async () => {
+        const st = document.getElementById('status');
+        st.textContent = '';
+        st.className = 'status';
+
+        const payload = {
+            name:           document.getElementById('name').value.trim(),
+            email:          document.getElementById('email').value.trim(),
+            password:       document.getElementById('password').value,
+            nativeLanguage: document.getElementById('nativeLanguage').value.trim(),
+            targetLanguage: document.getElementById('targetLanguage').value.trim(),
+            proficiency:    document.getElementById('proficiency').value,
+            location:       document.getElementById('location').value.trim(),
+            bio:            document.getElementById('bio').value.trim()
+        };
+
+        // Client-side validation
+        if (!payload.name) { st.textContent = 'Please enter your name.'; st.className='status err'; return; }
+        if (!payload.email || !payload.email.includes('@')) { st.textContent = 'Please enter a valid email.'; st.className='status err'; return; }
+        if (!payload.password || payload.password.length < 6) { st.textContent = 'Password must be at least 6 characters.'; st.className='status err'; return; }
+        if (!payload.nativeLanguage) { st.textContent = 'Please enter your native language.'; st.className='status err'; return; }
+        if (!payload.targetLanguage) { st.textContent = 'Please enter the language you are learning.'; st.className='status err'; return; }
+
+        try {
+            const res = await fetch('/auth/register', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                st.textContent = data.error || 'Registration failed. Please try again.';
+                st.className = 'status err';
+                return;
+            }
+            st.textContent = 'Account created! Redirecting to sign in…';
+            st.className = 'status ok';
+            setTimeout(() => window.location.href = '/login.html', 1500);
+        } catch(e) {
+            st.textContent = 'Could not connect. Please try again.';
+            st.className = 'status err';
+        }
+    });
+</script>
 </body>
 </html>

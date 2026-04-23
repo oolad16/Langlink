@@ -1,12 +1,11 @@
 package uk.ac.leicester.langlink.repository;
 
-import uk.ac.leicester.langlink.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
+import uk.ac.leicester.langlink.model.User;
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    List<User> findByNativeLanguageAndTargetLanguage(String nativeLanguage, String targetLanguage);
+    Optional<User> findByEmail(String email);
+    boolean existsByEmail(String email);
 }
-
 

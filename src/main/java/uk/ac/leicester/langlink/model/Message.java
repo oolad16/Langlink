@@ -19,7 +19,7 @@ public class Message {
 
     private Instant createdAt;
 
-    public Message() { }
+    public Message() {}
 
     public Message(Long fromUserId, Long toUserId, String content, Instant createdAt) {
         this.fromUserId = fromUserId;
@@ -29,16 +29,12 @@ public class Message {
     }
 
     public Long getId() { return id; }
-
     public Long getFromUserId() { return fromUserId; }
     public void setFromUserId(Long fromUserId) { this.fromUserId = fromUserId; }
-
     public Long getToUserId() { return toUserId; }
     public void setToUserId(Long toUserId) { this.toUserId = toUserId; }
-
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
-
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
 }

@@ -1,169 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>LangLink</title>
+    <title>LangLink – Dashboard</title>
     <style>
         :root{
-            --bg:#fff7ef;
-            --card:#ffffff;
-            --text:#1f2937;
-            --muted:#6b7280;
-            --border:#f1d2b7;
-            --shadow: 0 10px 30px rgba(31,41,55,.10);
-            --orange:#f97316;
-            --orange2:#fb923c;
-            --danger:#b91c1c;
-            --ok:#047857;
+            --bg:#fff7ef;--card:#ffffff;--text:#1f2937;--muted:#6b7280;
+            --border:#f1d2b7;--shadow:0 10px 30px rgba(31,41,55,.10);
+            --orange:#f97316;--orange2:#fb923c;--danger:#b91c1c;--ok:#047857;
         }
         *{box-sizing:border-box}
         body{
             margin:0;
-            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-            background: radial-gradient(1200px 600px at 15% 0%, rgba(249,115,22,.18), transparent 60%),
-            radial-gradient(1000px 600px at 90% 10%, rgba(251,146,60,.14), transparent 55%),
+            font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+            background:radial-gradient(1200px 600px at 15% 0%,rgba(249,115,22,.18),transparent 60%),
+            radial-gradient(1000px 600px at 90% 10%,rgba(251,146,60,.14),transparent 55%),
             var(--bg);
             color:var(--text);
         }
         header{
-            padding:24px 18px 10px;
-            max-width: 1100px;
-            margin: 0 auto;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:12px;
+            padding:20px 24px 12px;max-width:1140px;margin:0 auto;
+            display:flex;align-items:center;justify-content:space-between;gap:12px;
         }
         .brand{display:flex;align-items:center;gap:12px;}
         .logo{
             width:42px;height:42px;border-radius:12px;
-            background: linear-gradient(135deg, var(--orange), var(--orange2));
-            box-shadow: 0 10px 24px rgba(249,115,22,.25);
+            background:linear-gradient(135deg,var(--orange),var(--orange2));
+            box-shadow:0 10px 24px rgba(249,115,22,.25);flex-shrink:0;
         }
-        .brand h1{margin:0;font-size: 28px;letter-spacing: .2px;}
-        .brand p{margin:2px 0 0;color:var(--muted);font-size: 13px;}
-        .pill{
-            display:inline-flex;align-items:center;gap:8px;
-            padding:10px 12px;border-radius:999px;
-            border:1px solid var(--border);
-            background: rgba(255,255,255,.65);
-            backdrop-filter: blur(6px);
-            font-size: 13px;color: var(--muted);
+        .brand h1{margin:0;font-size:26px;}
+        .brand p{margin:2px 0 0;color:var(--muted);font-size:13px;}
+        .header-right{display:flex;align-items:center;gap:10px;}
+        .user-pill{
+            padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.7);
+            border:1px solid var(--border);font-size:13px;color:var(--text);backdrop-filter:blur(6px);
         }
-        .container{
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 12px 18px 40px;
-            display:grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
+        button.btn-logout{
+            padding:8px 14px;border-radius:999px;border:1px solid var(--border);
+            background:transparent;cursor:pointer;font-size:13px;color:var(--muted);
         }
-        @media (max-width: 920px){ .container{ grid-template-columns: 1fr; } }
-        .card{
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            box-shadow: var(--shadow);
-            padding: 16px;
-        }
-        .card h2{margin: 0 0 6px;font-size: 18px;}
-        .card p{margin: 0 0 12px;color: var(--muted);font-size: 13px;line-height: 1.35;}
-        .grid2{display:grid;grid-template-columns: 1fr 1fr;gap: 10px;}
-        @media (max-width: 520px){ .grid2{ grid-template-columns: 1fr; } }
-        label{display:block;font-size: 12px;color: var(--muted);margin-bottom: 6px;}
-        input, select{
-            width:100%;
-            padding: 12px 12px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            outline: none;
-            font-size: 14px;
-            background: #fff;
-        }
-        input:focus, select:focus{
-            border-color: rgba(249,115,22,.65);
-            box-shadow: 0 0 0 4px rgba(249,115,22,.12);
-        }
-        .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top: 10px;}
-        button{
-            border: 0;cursor:pointer;
-            padding: 11px 14px;
-            border-radius: 12px;
-            font-weight: 700;font-size: 14px;
-        }
-        .btn-primary{
-            background: linear-gradient(135deg, var(--orange), var(--orange2));
-            color: white;
-            box-shadow: 0 10px 22px rgba(249,115,22,.22);
-        }
-        .btn-ghost{
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text);
-        }
-        .btn-danger{
-            background: #fee2e2;
-            color: var(--danger);
-            border: 1px solid #fecaca;
-            font-weight: 800;
-        }
-        .status{margin-top: 10px;font-size: 13px;color: var(--muted);}
-        .status.ok{color: var(--ok);font-weight:700;}
-        .divider{height:1px;background: rgba(241,210,183,.8);margin: 14px 0;}
-        .list{margin: 0;padding-left: 18px;color: var(--text);}
-        .list li{margin: 8px 0;}
-        .small{font-size: 12px;color: var(--muted);}
-        details{margin-top: 10px;}
-        details > summary{cursor:pointer;color: var(--muted);font-weight: 700;}
-        .badge{
-            display:inline-block;
-            padding: 6px 10px;
-            border-radius: 999px;
-            border: 1px solid var(--border);
-            color: var(--muted);
-            font-size: 12px;
-            background: rgba(255,255,255,.7);
-        }
+        button.btn-logout:hover{background:rgba(185,28,28,.06);color:var(--danger);border-color:#fecaca;}
 
-        /* Chat UI */
+        .main{
+            max-width:1140px;margin:0 auto;padding:0 20px 48px;
+            display:grid;grid-template-columns:340px 1fr;gap:18px;
+        }
+        @media(max-width:920px){.main{grid-template-columns:1fr;}}
+
+        .card{
+            background:var(--card);border:1px solid var(--border);
+            border-radius:18px;box-shadow:var(--shadow);padding:20px;
+        }
+        .card h2{margin:0 0 4px;font-size:17px;}
+        .card .sub{margin:0 0 14px;color:var(--muted);font-size:12px;}
+        .divider{height:1px;background:rgba(241,210,183,.8);margin:16px 0;}
+
+        label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;margin-top:12px;}
+        input,select,textarea{
+            width:100%;padding:10px 12px;border-radius:11px;border:1px solid var(--border);
+            outline:none;font-size:13px;background:#fff;font-family:inherit;
+        }
+        textarea{resize:vertical;min-height:70px;}
+        input:focus,select:focus,textarea:focus{
+            border-color:rgba(249,115,22,.65);box-shadow:0 0 0 3px rgba(249,115,22,.12);
+        }
+        .row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-top:10px;}
+        .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+        @media(max-width:480px){.grid2{grid-template-columns:1fr;}}
+
+        button.btn-primary{
+            padding:10px 16px;border:0;cursor:pointer;border-radius:11px;
+            font-weight:700;font-size:13px;
+            background:linear-gradient(135deg,var(--orange),var(--orange2));
+            color:white;box-shadow:0 6px 16px rgba(249,115,22,.20);
+        }
+        button.btn-ghost{
+            padding:10px 14px;border:1px solid var(--border);cursor:pointer;
+            border-radius:11px;font-size:13px;background:transparent;color:var(--text);
+        }
+        button.btn-sm{
+            padding:7px 12px;border:0;cursor:pointer;border-radius:9px;
+            font-weight:700;font-size:12px;
+            background:linear-gradient(135deg,var(--orange),var(--orange2));
+            color:white;
+        }
+        .status{margin-top:8px;font-size:12px;color:var(--muted);min-height:16px;}
+        .status.ok{color:var(--ok);font-weight:700;}
+        .status.err{color:var(--danger);}
+
+        /* Profile display */
+        .profile-display{font-size:14px;line-height:1.7;}
+        .profile-display .pname{font-size:20px;font-weight:700;margin-bottom:2px;}
+        .profile-display .lang-badge{
+            display:inline-block;margin:4px 4px 0 0;padding:4px 10px;border-radius:999px;
+            background:rgba(249,115,22,.10);border:1px solid rgba(249,115,22,.25);
+            font-size:12px;color:var(--orange);font-weight:600;
+        }
+        .profile-display .bio{margin-top:8px;color:var(--muted);font-size:13px;}
+        .profile-display .loc{color:var(--muted);font-size:12px;margin-top:4px;}
+
+        /* Match cards */
+        .match-grid{
+            display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;
+            margin-top:12px;
+        }
+        .match-card{
+            background:rgba(255,255,255,.85);border:1px solid var(--border);
+            border-radius:14px;padding:14px;
+            box-shadow:0 4px 12px rgba(31,41,55,.06);
+        }
+        .match-card .mname{font-weight:700;font-size:15px;margin-bottom:4px;}
+        .match-card .mloc{font-size:12px;color:var(--muted);margin-bottom:6px;}
+        .match-card .mbio{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.4;}
+        .match-card .lang-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+
+        /* Chat */
         .chatBox{
-            border:1px solid var(--border);
-            border-radius: 14px;
-            padding: 10px;
-            background: rgba(255,255,255,.7);
-            max-height: 260px;
-            overflow:auto;
+            border:1px solid var(--border);border-radius:13px;padding:10px;
+            background:rgba(255,255,255,.7);height:240px;overflow:auto;
         }
-        .msg{
-            display:flex;
-            margin: 8px 0;
-            gap:8px;
-            align-items:flex-end;
-        }
+        .msg{display:flex;margin:7px 0;gap:7px;align-items:flex-end;}
         .bubble{
-            max-width: 78%;
-            padding: 10px 12px;
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            background:#fff;
-            font-size: 14px;
-            line-height:1.3;
+            max-width:78%;padding:9px 12px;border-radius:13px;
+            border:1px solid var(--border);background:#fff;font-size:13px;line-height:1.35;
         }
         .mine .bubble{
-            background: rgba(249,115,22,.10);
-            border-color: rgba(249,115,22,.35);
-            margin-left:auto;
+            background:rgba(249,115,22,.10);border-color:rgba(249,115,22,.35);margin-left:auto;
         }
-        .meta{
-            font-size: 11px;
-            color: var(--muted);
-            white-space: nowrap;
-        }
+        .meta{font-size:11px;color:var(--muted);white-space:nowrap;}
         .mine .meta{margin-left:auto;}
+        .chat-input-row{display:flex;gap:8px;margin-top:10px;align-items:flex-end;}
+        .chat-input-row input{flex:1;}
+
+        /* Loading */
+        #loadingOverlay{
+            position:fixed;inset:0;background:var(--bg);display:flex;
+            align-items:center;justify-content:center;z-index:999;
+            font-size:15px;color:var(--muted);
+        }
     </style>
 </head>
 <body>
+
+<div id="loadingOverlay">Loading LangLink…</div>
+
 <header>
     <div class="brand">
         <div class="logo"></div>
@@ -172,458 +153,320 @@
             <p>Meet people to practise languages nearby</p>
         </div>
     </div>
-    <span class="pill">Prototype</span>
+    <div class="header-right">
+        <span class="user-pill" id="headerName">–</span>
+        <button class="btn-logout" id="logoutBtn">Sign out</button>
+    </div>
 </header>
 
-<section class="container">
-    <!-- LEFT -->
-    <div class="card">
-        <h2>Create account</h2>
-        <p>Create a profile to use the app.</p>
+<div class="main">
+    <!-- ─── LEFT COLUMN ─────────────────────────────────────────── -->
+    <div style="display:flex;flex-direction:column;gap:18px;">
 
-        <div class="grid2">
-            <div>
-                <label for="name">Name</label>
-                <input id="name" placeholder="e.g. Tola" />
-            </div>
-            <div>
-                <label for="email">Email</label>
-                <input id="email" placeholder="e.g. tola@gmail.com" />
-            </div>
-            <div>
-                <label for="nativeLanguage">Native language</label>
-                <input id="nativeLanguage" placeholder="e.g. English" />
-            </div>
-            <div>
-                <label for="targetLanguage">Target language</label>
-                <input id="targetLanguage" placeholder="e.g. Spanish" />
-            </div>
+        <!-- My Profile -->
+        <div class="card" id="profileCard">
+            <h2>My Profile</h2>
+            <p class="sub">This is how other users see you.</p>
+            <div id="profileDisplay" class="profile-display">Loading…</div>
+            <div class="divider"></div>
+            <details id="editDetails">
+                <summary style="cursor:pointer;font-size:13px;color:var(--orange);font-weight:700;">Edit profile</summary>
+                <div class="grid2" style="margin-top:12px;">
+                    <div>
+                        <label>Name</label>
+                        <input id="editName"/>
+                    </div>
+                    <div>
+                        <label>Area / City</label>
+                        <input id="editLocation" placeholder="e.g. Leicester"/>
+                    </div>
+                    <div>
+                        <label>Native language</label>
+                        <input id="editNative"/>
+                    </div>
+                    <div>
+                        <label>Learning</label>
+                        <input id="editTarget"/>
+                    </div>
+                </div>
+                <div>
+                    <label>Proficiency</label>
+                    <select id="editProficiency">
+                        <option value="">– Select –</option>
+                        <option>Beginner</option>
+                        <option>Elementary</option>
+                        <option>Intermediate</option>
+                        <option>Upper-Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+                <div>
+                    <label>About me</label>
+                    <textarea id="editBio" placeholder="A short bio…"></textarea>
+                </div>
+                <div class="row">
+                    <button class="btn-primary" id="saveProfileBtn">Save changes</button>
+                </div>
+                <div class="status" id="profileStatus"></div>
+            </details>
         </div>
 
-        <div class="row">
-            <button class="btn-primary" id="createBtn">Create account</button>
-            <button class="btn-ghost" id="clearBtn">Clear</button>
-        </div>
-        <div class="status" id="createStatus"></div>
-
-        <div class="divider"></div>
-
-        <h2>Sign in</h2>
-        <p class="small">Enter your User ID to continue.</p>
-        <div class="row" style="width:100%">
-            <div style="flex:1; min-width: 220px;">
-                <label for="loginUserId">Your User ID</label>
-                <input id="loginUserId" placeholder="e.g. 5" />
-            </div>
-            <div style="align-self:flex-end">
-                <button class="btn-primary" id="loginBtn">Sign in</button>
-            </div>
-            <div style="align-self:flex-end">
-                <button class="btn-ghost" id="logoutBtn">Sign out</button>
-            </div>
-        </div>
-        <div class="status" id="authStatus"></div>
-    </div>
-
-    <!-- RIGHT -->
-    <div class="card">
-        <h2>My dashboard</h2>
-        <p>View your profile, find matches, and chat.</p>
-
-        <div class="row">
-            <span class="badge" id="signedInBadge">Not signed in</span>
-            <button class="btn-ghost" id="loadMeBtn">Load my profile</button>
-        </div>
-        <div class="status" id="meStatus"></div>
-
-        <div class="divider"></div>
-
-        <h2>Find matches</h2>
-        <p class="small">Matches are based on language pairing.</p>
-        <div class="row" style="width:100%">
-            <button class="btn-primary" id="findMatchesBtn">Find matches</button>
-            <button class="btn-ghost" id="clearMatchesBtn">Clear</button>
-        </div>
-
-        <ul class="list" id="matchesList"></ul>
-        <div class="status" id="matchesStatus"></div>
-
-        <div class="divider"></div>
-
-        <h2>Chat</h2>
-        <p class="small">Enter a match ID to load messages.</p>
-
-        <div class="row" style="width:100%">
-            <div style="flex:1; min-width: 220px;">
-                <label for="chatWithId">Chat with (User ID)</label>
-                <input id="chatWithId" placeholder="e.g. 3" />
-            </div>
-            <div style="align-self:flex-end">
-                <button class="btn-ghost" id="loadChatBtn">Load chat</button>
-            </div>
-            <div style="align-self:flex-end">
-                <button class="btn-ghost" id="refreshChatBtn">Refresh</button>
-            </div>
-        </div>
-
-        <div class="chatBox" id="chatBox"></div>
-        <div class="status" id="chatStatus"></div>
-
-        <div class="row" style="width:100%">
-            <div style="flex:1; min-width: 220px;">
-                <label for="chatMessage">Message</label>
-                <input id="chatMessage" placeholder="Type a message…" />
-            </div>
-            <div style="align-self:flex-end">
+        <!-- Chat (left panel) -->
+        <div class="card">
+            <h2>Chat</h2>
+            <p class="sub">Select a match to open the conversation.</p>
+            <div id="chatHeader" style="font-size:13px;color:var(--muted);margin-bottom:8px;">No conversation open.</div>
+            <div class="chatBox" id="chatBox"></div>
+            <div class="status" id="chatStatus"></div>
+            <div class="chat-input-row">
+                <input id="chatMessage" placeholder="Type a message…"/>
                 <button class="btn-primary" id="sendChatBtn">Send</button>
             </div>
         </div>
 
-        <details>
-            <summary>Admin tools</summary>
-            <div class="divider"></div>
-
-            <h2>Users</h2>
-            <div class="row">
-                <button class="btn-ghost" id="refreshUsersBtn">Refresh users</button>
-            </div>
-            <ul class="list" id="usersList"></ul>
-            <div class="status" id="usersStatus"></div>
-
-            <div class="divider"></div>
-
-            <h2>Delete user</h2>
-            <div class="row" style="width:100%">
-                <div style="flex:1; min-width: 220px;">
-                    <label for="deleteUserId">User ID</label>
-                    <input id="deleteUserId" placeholder="e.g. 3" />
-                </div>
-                <div style="align-self:flex-end">
-                    <button class="btn-danger" id="deleteBtn">Delete</button>
-                </div>
-            </div>
-            <div class="status" id="deleteStatus"></div>
-        </details>
-
     </div>
-</section>
+
+    <!-- ─── RIGHT COLUMN ────────────────────────────────────────── -->
+    <div class="card">
+        <h2>Find Matches</h2>
+        <p class="sub">People who speak your target language and want to learn yours.</p>
+        <div class="row">
+            <div style="flex:1;min-width:160px;">
+                <label>Filter by area <span style="font-weight:normal">(optional)</span></label>
+                <input id="locationFilter" placeholder="e.g. Leicester"/>
+            </div>
+            <button class="btn-primary" id="findMatchesBtn">Find matches</button>
+            <button class="btn-ghost" id="clearMatchesBtn">Clear</button>
+        </div>
+        <div class="status" id="matchesStatus"></div>
+        <div class="match-grid" id="matchGrid"></div>
+    </div>
+</div>
 
 <script>
-    // ===== Helpers =====
-    const $ = (id) => document.getElementById(id);
+    // ── State ─────────────────────────────────────────────────────────
+    let me = null; // logged-in user object
+    let chatPartnerId = null;
+    let chatPartnerName = '';
 
-    function setSignedIn(userId){
-        if(userId){
-            localStorage.setItem("langlink_userId", String(userId));
-        } else {
-            localStorage.removeItem("langlink_userId");
-        }
-        updateAuthUI();
+    // ── Helpers ───────────────────────────────────────────────────────
+    const $ = id => document.getElementById(id);
+    function safeText(s){ return (s == null) ? '' : String(s); }
+
+    function fmtTime(iso){
+        try {
+            const d = new Date(iso);
+            return isNaN(d) ? '' : d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+        } catch(_){ return ''; }
     }
 
-    function getSignedInUserId(){
-        const v = localStorage.getItem("langlink_userId");
-        if(!v) return null;
-        const n = Number(v);
-        return Number.isFinite(n) ? n : null;
+    async function apiFetch(url, opts={}){
+        const res = await fetch(url, opts);
+        if (res.status === 401) { window.location.href = '/login.html'; return null; }
+        return res;
     }
 
-    function updateAuthUI(){
-        const userId = getSignedInUserId();
-        $("signedInBadge").textContent = userId ? `Signed in as User ${userId}` : "Not signed in";
-        $("authStatus").textContent = userId ? "Signed in." : "Please sign in.";
-    }
-
-    async function apiGet(url){
-        const res = await fetch(url);
-        if(!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-        return res.json();
-    }
-
-    async function apiPost(url, data){
-        const res = await fetch(url, {
-            method: "POST",
-            headers: {"Content-Type":"application/json"},
-            body: JSON.stringify(data)
-        });
-        if(!res.ok) {
-            const text = await res.text().catch(()=> "");
-            throw new Error(`${res.status} ${res.statusText}${text ? " - " + text : ""}`);
-        }
-        return res.json();
-    }
-
-    async function apiDelete(url){
-        const res = await fetch(url, { method: "DELETE" });
-        if(!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-        return true;
-    }
-
-    function safeText(s){ return (s === null || s === undefined) ? "" : String(s); }
-
-    // Customer view (no email)
-    function renderPublicUser(u){
-        const name = safeText(u.name) || "User";
-        const nativeLang = safeText(u.nativeLanguage);
-        const targetLang = safeText(u.targetLanguage);
-        const parts = [];
-        if(nativeLang) parts.push(`Native: ${nativeLang}`);
-        if(targetLang) parts.push(`Target: ${targetLang}`);
-        return `${name}${parts.length ? " — " + parts.join(" • ") : ""}`;
-    }
-
-    function fmtTime(isoOrInstant){
-        try{
-            const d = new Date(isoOrInstant);
-            if(isNaN(d.getTime())) return "";
-            return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-        }catch(_){
-            return "";
-        }
-    }
-
-    // ===== Create account =====
-    $("createBtn").addEventListener("click", async () => {
-        $("createStatus").textContent = "";
-        $("createStatus").className = "status";
-        try{
-            const payload = {
-                name: $("name").value,
-                email: $("email").value,
-                nativeLanguage: $("nativeLanguage").value,
-                targetLanguage: $("targetLanguage").value
-            };
-
-            const created = await apiPost("/users", payload);
-            const newId = created.id ?? created.userId ?? "";
-
-            $("createStatus").textContent =
-                newId ? `Account created. Your User ID is ${newId}.`
-                    : "Account created.";
-
-            $("createStatus").className = "status ok";
-
-            if(newId) $("loginUserId").value = newId;
-        } catch(e){
-            $("createStatus").textContent = `Create failed: ${e.message}`;
-        }
-    });
-
-    $("clearBtn").addEventListener("click", () => {
-        ["name","email","nativeLanguage","targetLanguage"].forEach(id => $(id).value = "");
-        $("createStatus").textContent = "";
-        $("createStatus").className = "status";
-    });
-
-    // ===== Sign in/out =====
-    $("loginBtn").addEventListener("click", () => {
-        const id = Number($("loginUserId").value);
-        if(!Number.isFinite(id) || id <= 0){
-            $("authStatus").textContent = "Enter a valid User ID.";
-            return;
-        }
-        setSignedIn(id);
-    });
-
-    $("logoutBtn").addEventListener("click", () => {
-        setSignedIn(null);
-        $("meStatus").textContent = "";
-        $("matchesList").innerHTML = "";
-        $("matchesStatus").textContent = "";
-        $("chatBox").innerHTML = "";
-        $("chatStatus").textContent = "";
-        $("chatWithId").value = "";
-        $("chatMessage").value = "";
-    });
-
-    // ===== Load my profile =====
-    $("loadMeBtn").addEventListener("click", async () => {
-        $("meStatus").textContent = "";
-        const userId = getSignedInUserId();
-        if(!userId){ $("meStatus").textContent = "Sign in first."; return; }
-
-        try{
-            const users = await apiGet("/users");
-            const me = users.find(u => Number(u.id) === Number(userId));
-            if(!me){ $("meStatus").textContent = `User ${userId} not found.`; return; }
-            $("meStatus").textContent = `Profile: ${renderPublicUser(me)}`;
-            $("meStatus").className = "status ok";
-        } catch(e){
-            $("meStatus").textContent = `Load failed: ${e.message}`;
-            $("meStatus").className = "status";
-        }
-    });
-
-    // ===== Find matches =====
-    $("findMatchesBtn").addEventListener("click", async () => {
-        $("matchesStatus").textContent = "";
-        $("matchesList").innerHTML = "";
-        const userId = getSignedInUserId();
-        if(!userId){ $("matchesStatus").textContent = "Sign in first."; return; }
-
-        try{
-            let matches = null;
-            try{
-                matches = await apiGet(`/users/${userId}/matches`);
-            } catch(_){
-                matches = await apiGet(`/matches?userId=${userId}`);
-            }
-
-            if(!Array.isArray(matches) || matches.length === 0){
-                $("matchesStatus").textContent = "No matches found yet.";
+    // ── Boot: check session ───────────────────────────────────────────
+    async function init() {
+        try {
+            const res = await fetch('/auth/me');
+            if (!res.ok) {
+                window.location.href = '/login.html';
                 return;
             }
+            me = await res.json();
+            $('headerName').textContent = me.name || me.email;
+            renderProfileDisplay();
+            $('loadingOverlay').style.display = 'none';
+        } catch(e) {
+            window.location.href = '/login.html';
+        }
+    }
 
-            matches.forEach(u => {
-                const li = document.createElement("li");
-                li.textContent = `${renderPublicUser(u)} (Match ID: ${u.id})`;
-                $("matchesList").appendChild(li);
+    // ── Profile display ───────────────────────────────────────────────
+    function renderProfileDisplay(){
+        const el = $('profileDisplay');
+        el.innerHTML = `
+    <div class="pname">${safeText(me.name)}</div>
+    <span class="lang-badge">Speaks ${safeText(me.nativeLanguage)||'–'}</span>
+    <span class="lang-badge">Learning ${safeText(me.targetLanguage)||'–'}</span>
+    ${me.proficiency ? `<span class="lang-badge">${safeText(me.proficiency)}</span>` : ''}
+    ${me.location ? `<div class="loc">📍 ${safeText(me.location)}</div>` : ''}
+    ${me.bio ? `<div class="bio">${safeText(me.bio)}</div>` : ''}
+  `;
+        // Pre-fill edit fields
+        $('editName').value = safeText(me.name);
+        $('editNative').value = safeText(me.nativeLanguage);
+        $('editTarget').value = safeText(me.targetLanguage);
+        $('editLocation').value = safeText(me.location);
+        $('editBio').value = safeText(me.bio);
+        $('editProficiency').value = safeText(me.proficiency);
+    }
+
+    // ── Save profile ──────────────────────────────────────────────────
+    $('saveProfileBtn').addEventListener('click', async () => {
+        const st = $('profileStatus');
+        st.textContent = ''; st.className = 'status';
+        const payload = {
+            name: $('editName').value.trim(),
+            nativeLanguage: $('editNative').value.trim(),
+            targetLanguage: $('editTarget').value.trim(),
+            location: $('editLocation').value.trim(),
+            bio: $('editBio').value.trim(),
+            proficiency: $('editProficiency').value
+        };
+        if (!payload.name){ st.textContent='Name cannot be empty.'; st.className='status err'; return; }
+        try {
+            const res = await apiFetch('/users/me', {
+                method:'PUT', headers:{'Content-Type':'application/json'},
+                body: JSON.stringify(payload)
             });
-
-            $("matchesStatus").textContent = `Found ${matches.length} match(es).`;
-            $("matchesStatus").className = "status ok";
-        } catch(e){
-            $("matchesStatus").textContent = `Match search failed: ${e.message}`;
-            $("matchesStatus").className = "status";
+            if (!res || !res.ok) {
+                const d = res ? await res.json().catch(()=>({})) : {};
+                st.textContent = d.error || 'Save failed.'; st.className='status err'; return;
+            }
+            me = await res.json();
+            $('headerName').textContent = me.name || me.email;
+            renderProfileDisplay();
+            st.textContent = 'Profile saved.'; st.className='status ok';
+            $('editDetails').removeAttribute('open');
+        } catch(e) {
+            st.textContent = 'Could not save. Please try again.'; st.className='status err';
         }
     });
 
-    $("clearMatchesBtn").addEventListener("click", () => {
-        $("matchesList").innerHTML = "";
-        $("matchesStatus").textContent = "";
-        $("matchesStatus").className = "status";
+    // ── Logout ────────────────────────────────────────────────────────
+    $('logoutBtn').addEventListener('click', async () => {
+        await fetch('/auth/logout', {method:'POST'});
+        window.location.href = '/login.html';
     });
 
-    // ===== Chat =====
-    let currentChatPartnerId = null;
+    // ── Find matches ──────────────────────────────────────────────────
+    $('findMatchesBtn').addEventListener('click', async () => {
+        const st = $('matchesStatus');
+        const grid = $('matchGrid');
+        st.textContent = 'Searching…'; st.className = 'status';
+        grid.innerHTML = '';
+        const locationFilter = $('locationFilter').value.trim();
+        const url = locationFilter ? `/users/me/matches?location=${encodeURIComponent(locationFilter)}` : '/users/me/matches';
+        try {
+            const res = await apiFetch(url);
+            if (!res) return;
+            const matches = await res.json();
+            if (!res.ok) {
+                st.textContent = matches.error || 'Could not load matches.'; st.className='status err'; return;
+            }
+            if (!matches.length){
+                st.textContent = locationFilter
+                    ? 'No matches found in that area. Try broadening your search or leave the area field blank.'
+                    : 'No matches yet — you will appear when someone with the opposite language pairing signs up.';
+                return;
+            }
+            matches.forEach(u => grid.appendChild(buildMatchCard(u)));
+            st.textContent = `Found ${matches.length} match${matches.length===1?'':'es'}.`;
+            st.className = 'status ok';
+        } catch(e) {
+            st.textContent = 'Search failed. Please try again.'; st.className='status err';
+        }
+    });
+
+    $('clearMatchesBtn').addEventListener('click', () => {
+        $('matchGrid').innerHTML = '';
+        $('matchesStatus').textContent = '';
+        $('matchesStatus').className = 'status';
+    });
+
+    function buildMatchCard(u){
+        const card = document.createElement('div');
+        card.className = 'match-card';
+        const bio = safeText(u.bio);
+        const loc = safeText(u.location);
+        const prof = safeText(u.proficiency);
+        card.innerHTML = `
+    <div class="mname">${safeText(u.name)||'User'}</div>
+    ${loc ? `<div class="mloc">📍 ${loc}</div>` : ''}
+    <div class="lang-row">
+      <span class="lang-badge">Speaks ${safeText(u.nativeLanguage)||'–'}</span>
+      <span class="lang-badge">Learning ${safeText(u.targetLanguage)||'–'}</span>
+      ${prof ? `<span class="lang-badge">${prof}</span>` : ''}
+    </div>
+    ${bio ? `<div class="mbio">${bio.length>100?bio.slice(0,100)+'…':bio}</div>` : ''}
+    <button class="btn-sm start-chat-btn" data-id="${u.id}" data-name="${safeText(u.name)}">
+      Message ${safeText(u.name)||'them'}
+    </button>
+  `;
+        card.querySelector('.start-chat-btn').addEventListener('click', () => {
+            openChat(u.id, u.name);
+        });
+        return card;
+    }
+
+    // ── Chat ──────────────────────────────────────────────────────────
+    function openChat(partnerId, partnerName){
+        chatPartnerId = partnerId;
+        chatPartnerName = partnerName || `User ${partnerId}`;
+        $('chatHeader').textContent = `Conversation with ${chatPartnerName}`;
+        $('chatHeader').style.color = 'var(--orange)';
+        loadConversation();
+    }
 
     async function loadConversation(){
-        $("chatStatus").textContent = "";
-        $("chatBox").innerHTML = "";
-
-        const me = getSignedInUserId();
-        const other = Number($("chatWithId").value);
-
-        if(!me){ $("chatStatus").textContent = "Sign in first."; return; }
-        if(!Number.isFinite(other) || other <= 0){ $("chatStatus").textContent = "Enter a valid User ID."; return; }
-
-        currentChatPartnerId = other;
-
-        try{
-            const messages = await apiGet(`/chat/conversation?user1=${me}&user2=${other}`);
-            if(!Array.isArray(messages) || messages.length === 0){
-                $("chatStatus").textContent = "No messages yet.";
-                return;
-            }
-
-            messages.forEach(m => {
-                const wrapper = document.createElement("div");
-                wrapper.className = "msg " + (Number(m.fromUserId) === Number(me) ? "mine" : "theirs");
-
-                const bubble = document.createElement("div");
-                bubble.className = "bubble";
-                bubble.textContent = safeText(m.content);
-
-                const meta = document.createElement("div");
-                meta.className = "meta";
-                meta.textContent = fmtTime(m.createdAt);
-
-                if(wrapper.classList.contains("mine")){
-                    wrapper.appendChild(meta);
-                    wrapper.appendChild(bubble);
-                } else {
-                    wrapper.appendChild(bubble);
-                    wrapper.appendChild(meta);
-                }
-
-                $("chatBox").appendChild(wrapper);
-            });
-
-            $("chatBox").scrollTop = $("chatBox").scrollHeight;
-            $("chatStatus").textContent = "Conversation loaded.";
-            $("chatStatus").className = "status ok";
+        if (!chatPartnerId) return;
+        $('chatStatus').textContent = ''; $('chatStatus').className = 'status';
+        $('chatBox').innerHTML = '';
+        try {
+            const res = await apiFetch(`/chat/conversation?withUserId=${chatPartnerId}`);
+            if (!res) return;
+            const messages = await res.json();
+            if (!res.ok){ $('chatStatus').textContent = messages.error||'Load failed.'; return; }
+            if (!messages.length){ $('chatStatus').textContent = 'No messages yet. Say hello!'; return; }
+            messages.forEach(m => $('chatBox').appendChild(buildMessageEl(m)));
+            $('chatBox').scrollTop = $('chatBox').scrollHeight;
         } catch(e){
-            $("chatStatus").textContent = `Chat load failed: ${e.message}`;
-            $("chatStatus").className = "status";
+            $('chatStatus').textContent = 'Could not load messages.'; $('chatStatus').className='status err';
         }
     }
 
-    $("loadChatBtn").addEventListener("click", loadConversation);
-    $("refreshChatBtn").addEventListener("click", loadConversation);
+    function buildMessageEl(m){
+        const mine = Number(m.fromUserId) === Number(me.id);
+        const wrapper = document.createElement('div');
+        wrapper.className = 'msg ' + (mine ? 'mine' : 'theirs');
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        bubble.textContent = safeText(m.content);
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        meta.textContent = fmtTime(m.createdAt);
+        if (mine){ wrapper.appendChild(meta); wrapper.appendChild(bubble); }
+        else { wrapper.appendChild(bubble); wrapper.appendChild(meta); }
+        return wrapper;
+    }
 
-    $("sendChatBtn").addEventListener("click", async () => {
-        $("chatStatus").textContent = "";
-        $("chatStatus").className = "status";
+    $('sendChatBtn').addEventListener('click', sendMessage);
+    $('chatMessage').addEventListener('keydown', e => { if(e.key==='Enter'){ e.preventDefault(); sendMessage(); }});
 
-        const me = getSignedInUserId();
-        const other = Number($("chatWithId").value);
-        const text = $("chatMessage").value.trim();
-
-        if(!me){ $("chatStatus").textContent = "Sign in first."; return; }
-        if(!Number.isFinite(other) || other <= 0){ $("chatStatus").textContent = "Enter a valid User ID."; return; }
-        if(!text){ $("chatStatus").textContent = "Type a message first."; return; }
-
-        try{
-            await apiPost("/chat/send", {
-                fromUserId: me,
-                toUserId: other,
-                content: text
+    async function sendMessage(){
+        const st = $('chatStatus');
+        st.textContent = ''; st.className = 'status';
+        if (!chatPartnerId){ st.textContent='Select a match to chat with.'; st.className='status err'; return; }
+        const text = $('chatMessage').value.trim();
+        if (!text){ st.textContent='Type a message first.'; st.className='status err'; return; }
+        try {
+            const res = await apiFetch('/chat/send', {
+                method:'POST', headers:{'Content-Type':'application/json'},
+                body: JSON.stringify({ toUserId: chatPartnerId, content: text })
             });
-
-            $("chatMessage").value = "";
-            $("chatStatus").textContent = "Message sent.";
-            $("chatStatus").className = "status ok";
-
+            if (!res) return;
+            const data = await res.json();
+            if (!res.ok){ st.textContent = data.error||'Send failed.'; st.className='status err'; return; }
+            $('chatMessage').value = '';
             await loadConversation();
         } catch(e){
-            $("chatStatus").textContent = `Send failed: ${e.message}`;
-            $("chatStatus").className = "status";
+            st.textContent = 'Send failed.'; st.className='status err';
         }
-    });
+    }
 
-    $("chatMessage").addEventListener("keydown", async (e) => {
-        if(e.key === "Enter"){
-            e.preventDefault();
-            $("sendChatBtn").click();
-        }
-    });
-
-    // ===== Admin tools =====
-    $("refreshUsersBtn").addEventListener("click", async () => {
-        $("usersStatus").textContent = "";
-        $("usersList").innerHTML = "";
-        try{
-            const users = await apiGet("/users");
-            if(!users.length){ $("usersStatus").textContent = "No users yet."; return; }
-            users.forEach(u => {
-                const li = document.createElement("li");
-                li.textContent = `ID ${u.id} — ${safeText(u.name)} (${safeText(u.nativeLanguage)} → ${safeText(u.targetLanguage)})`;
-                $("usersList").appendChild(li);
-            });
-            $("usersStatus").textContent = `Loaded ${users.length} user(s).`;
-            $("usersStatus").className = "status ok";
-        } catch(e){
-            $("usersStatus").textContent = `Refresh failed: ${e.message}`;
-            $("usersStatus").className = "status";
-        }
-    });
-
-    $("deleteBtn").addEventListener("click", async () => {
-        $("deleteStatus").textContent = "";
-        const id = Number($("deleteUserId").value);
-        if(!Number.isFinite(id) || id <= 0){ $("deleteStatus").textContent = "Enter a valid user ID."; return; }
-        try{
-            await apiDelete(`/users/${id}`);
-            $("deleteStatus").textContent = `Deleted user ${id}.`;
-            $("deleteStatus").className = "status ok";
-        } catch(e){
-            $("deleteStatus").textContent = `Delete failed: ${e.message}`;
-            $("deleteStatus").className = "status";
-        }
-    });
-
-    // Init
-    updateAuthUI();
+    init();
 </script>
 </body>
 </html>

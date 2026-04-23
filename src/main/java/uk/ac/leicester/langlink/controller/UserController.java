@@ -1,12 +1,12 @@
 package uk.ac.leicester.langlink.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.leicester.langlink.model.User;
 import uk.ac.leicester.langlink.repository.UserRepository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/users")
@@ -18,67 +18,124 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    // GET http://localhost:8080/users
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    // ── GET /users/me ─────────────────────────────────────────────
+    // Returns full profile of the currently logged-in user
+    @GetMapping("/me")
+    public ResponseEntity<?> getMyProfile(Authentication auth) {
+        return resolveCurrentUser(auth)
+                .map(u -> ResponseEntity.ok(toPublicProfile(u)))
+                .orElse(ResponseEntity.status(401).build());
     }
 
-    // POST http://localhost:8080/users
-    @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userRepository.save(user);
+    // ── PUT /users/me ─────────────────────────────────────────────
+    // Edit own profile only
+    @PutMapping("/me")
+    public ResponseEntity<?> updateMyProfile(@RequestBody UpdateProfileRequest req,
+                                             Authentication auth) {
+        return resolveCurrentUser(auth).map(user -> {
+            if (req.name != null && !req.name.trim().isEmpty()) user.setName(req.name.trim());
+            if (req.nativeLanguage != null) user.setNativeLanguage(req.nativeLanguage.trim());
+            if (req.targetLanguage != null) user.setTargetLanguage(req.targetLanguage.trim());
+            if (req.bio != null) user.setBio(req.bio.trim());
+            if (req.location != null) user.setLocation(req.location.trim());
+            if (req.proficiency != null) user.setProficiency(req.proficiency.trim());
+            userRepository.save(user);
+            return ResponseEntity.ok(toPublicProfile(user));
+        }).orElse(ResponseEntity.status(401).build());
     }
 
-    // DELETE http://localhost:8080/users/{id}
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        if (!userRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        userRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    // PUT http://localhost:8080/users/{id}
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updated) {
+    // ── GET /users/{id}/profile ──────────────────────────────────
+    // View another user's public profile (no email, no private fields)
+    @GetMapping("/{id}/profile")
+    public ResponseEntity<?> getPublicProfile(@PathVariable Long id, Authentication auth) {
+        if (auth == null) return ResponseEntity.status(401).build();
         return userRepository.findById(id)
-                .map(existing -> {
-                    existing.setName(updated.getName());
-                    existing.setEmail(updated.getEmail());
-                    existing.setNativeLanguage(updated.getNativeLanguage());
-                    existing.setTargetLanguage(updated.getTargetLanguage());
-                    User saved = userRepository.save(existing);
-                    return ResponseEntity.ok(saved);
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .map(u -> ResponseEntity.ok(toPublicProfile(u)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // GET http://localhost:8080/users/{id}/matches
-    @GetMapping("/{id}/matches")
-    public ResponseEntity<List<User>> findMatches(@PathVariable Long id) {
-        User me = userRepository.findById(id).orElse(null);
-        if (me == null) return ResponseEntity.notFound().build();
+    // ── GET /users/me/matches ─────────────────────────────────────
+    // Find matches: language swap + optional location filter
+    @GetMapping("/me/matches")
+    public ResponseEntity<?> findMatches(@RequestParam(required = false) String location,
+                                         Authentication auth) {
+        Optional<User> meOpt = resolveCurrentUser(auth);
+        if (meOpt.isEmpty()) return ResponseEntity.status(401).build();
+
+        User me = meOpt.get();
+        if (me.getNativeLanguage() == null || me.getTargetLanguage() == null) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Set your native and target language first."));
+        }
 
         List<User> all = userRepository.findAll();
-        List<User> matches = new ArrayList<>();
+        List<Map<String, Object>> matches = new ArrayList<>();
 
         for (User u : all) {
-            if (u.getId() == null || u.getId().equals(me.getId())) continue;
+            if (u.getId().equals(me.getId())) continue;
+            if (u.getNativeLanguage() == null || u.getTargetLanguage() == null) continue;
 
-            boolean languageSwapMatch =
-                    me.getNativeLanguage() != null && me.getTargetLanguage() != null &&
-                            u.getNativeLanguage() != null && u.getTargetLanguage() != null &&
-                            me.getNativeLanguage().equalsIgnoreCase(u.getTargetLanguage()) &&
+            boolean languageMatch =
+                    me.getNativeLanguage().equalsIgnoreCase(u.getTargetLanguage()) &&
                             me.getTargetLanguage().equalsIgnoreCase(u.getNativeLanguage());
 
-            if (languageSwapMatch) {
-                matches.add(u);
+            if (!languageMatch) continue;
+
+            // Optional location filter: loose contains match (city/borough/area)
+            if (location != null && !location.isBlank()) {
+                String filterArea = location.trim().toLowerCase();
+                String userArea = u.getLocation() != null ? u.getLocation().toLowerCase() : "";
+                if (!userArea.contains(filterArea) && !filterArea.contains(userArea)) {
+                    continue;
+                }
             }
+
+            matches.add(toPublicProfile(u));
         }
 
         return ResponseEntity.ok(matches);
     }
-}
 
+    // ── DELETE /users/me ──────────────────────────────────────────
+    // Allow user to delete their own account
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteMyAccount(Authentication auth) {
+        return resolveCurrentUser(auth).map(user -> {
+            userRepository.delete(user);
+            return ResponseEntity.noContent().<Void>build();
+        }).orElse(ResponseEntity.status(401).build());
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────
+
+    private Optional<User> resolveCurrentUser(Authentication auth) {
+        if (auth == null || !auth.isAuthenticated()) return Optional.empty();
+        return userRepository.findByEmail(auth.getName());
+    }
+
+    // Returns only safe public data — no password, no raw email for other users
+    private Map<String, Object> toPublicProfile(User u) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("id", u.getId());
+        map.put("name", u.getName() != null ? u.getName() : "");
+        map.put("nativeLanguage", u.getNativeLanguage() != null ? u.getNativeLanguage() : "");
+        map.put("targetLanguage", u.getTargetLanguage() != null ? u.getTargetLanguage() : "");
+        map.put("bio", u.getBio() != null ? u.getBio() : "");
+        map.put("location", u.getLocation() != null ? u.getLocation() : "");
+        map.put("proficiency", u.getProficiency() != null ? u.getProficiency() : "");
+        // Email only included as it's needed on the dashboard for "my own" profile;
+        // the UI should not display it in match cards
+        map.put("email", u.getEmail() != null ? u.getEmail() : "");
+        return map;
+    }
+
+    // ── Request DTOs ──────────────────────────────────────────────
+    public static class UpdateProfileRequest {
+        public String name;
+        public String nativeLanguage;
+        public String targetLanguage;
+        public String bio;
+        public String location;
+        public String proficiency;
+    }
+}
