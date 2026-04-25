@@ -4,88 +4,228 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>LangLink – Sign In</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Lora:ital,wght@0,500;1,400&display=swap" rel="stylesheet"/>
     <style>
-        :root{
-            --bg:#fff7ef; --card:#ffffff; --text:#1f2937; --muted:#6b7280;
-            --border:#f1d2b7; --orange:#f97316; --orange2:#fb923c;
-            --danger:#b91c1c; --ok:#047857;
+        :root {
+            --teal:       #0d9488;
+            --teal-light: #14b8a6;
+            --teal-pale:  #ccfbf1;
+            --green:      #16a34a;
+            --blue:       #0ea5e9;
+            --bg:         #f0fdfa;
+            --card:       #ffffff;
+            --text:       #134e4a;
+            --muted:      #5eead4;
+            --muted-text: #6b7280;
+            --border:     #99f6e4;
+            --danger:     #dc2626;
+            --ok:         #16a34a;
+            --shadow:     0 20px 60px rgba(13,148,136,.12);
         }
-        *{box-sizing:border-box}
-        body{
-            margin:0;
-            font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;
-            background: radial-gradient(1200px 600px at 15% 0%,rgba(249,115,22,.18),transparent 60%),
-            radial-gradient(1000px 600px at 90% 10%,rgba(251,146,60,.14),transparent 55%),
-            var(--bg);
-            color:var(--text);
-            min-height:100vh;
-            display:flex;align-items:center;justify-content:center;
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            position: relative;
+            overflow-y: auto;
         }
-        .wrap{width:100%;max-width:420px;padding:20px;}
-        .brand{text-align:center;margin-bottom:28px;}
-        .logo{
-            width:52px;height:52px;border-radius:14px;margin:0 auto 12px;
-            background:linear-gradient(135deg,var(--orange),var(--orange2));
-            box-shadow:0 10px 24px rgba(249,115,22,.25);
+
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
         }
-        .brand h1{margin:0;font-size:28px;}
-        .brand p{margin:4px 0 0;color:var(--muted);font-size:13px;}
-        .card{
-            background:var(--card);border:1px solid var(--border);
-            border-radius:18px;box-shadow:0 10px 30px rgba(31,41,55,.10);padding:28px;
+        body::before {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(20,184,166,.18) 0%, transparent 70%);
+            top: -200px; left: -150px;
         }
-        .card h2{margin:0 0 18px;font-size:20px;}
-        label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;margin-top:14px;}
-        input{
-            width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);
-            outline:none;font-size:14px;background:#fff;
+        body::after {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(14,165,233,.14) 0%, transparent 70%);
+            bottom: -150px; right: -100px;
         }
-        input:focus{border-color:rgba(249,115,22,.65);box-shadow:0 0 0 4px rgba(249,115,22,.12);}
-        button.btn{
-            width:100%;margin-top:20px;padding:13px;border:0;cursor:pointer;
-            border-radius:12px;font-weight:700;font-size:15px;
-            background:linear-gradient(135deg,var(--orange),var(--orange2));
-            color:white;box-shadow:0 10px 22px rgba(249,115,22,.22);
+
+        .wrap {
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            z-index: 1;
+            padding: 16px 0 32px;
         }
-        .status{margin-top:12px;font-size:13px;color:var(--muted);min-height:18px;}
-        .status.err{color:var(--danger);}
-        .status.ok{color:var(--ok);font-weight:700;}
-        .foot{text-align:center;margin-top:16px;font-size:13px;color:var(--muted);}
-        .foot a{color:var(--orange);text-decoration:none;font-weight:600;}
+
+        .brand {
+            text-align: center;
+            margin-bottom: 32px;
+            animation: fadeDown .6s ease both;
+        }
+        .logo-wrap {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px; height: 64px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--teal), var(--blue));
+            box-shadow: 0 12px 32px rgba(13,148,136,.35);
+            margin-bottom: 14px;
+            font-size: 28px;
+        }
+        .brand h1 {
+            font-family: 'Lora', serif;
+            font-size: 32px;
+            font-weight: 500;
+            color: var(--text);
+            letter-spacing: -.3px;
+        }
+        .brand p {
+            font-size: 14px;
+            color: var(--muted-text);
+            margin-top: 4px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            padding: 36px 32px;
+            animation: fadeUp .6s .1s ease both;
+        }
+        .card h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 24px;
+        }
+
+        .field { margin-bottom: 18px; }
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+        input {
+            width: 100%;
+            padding: 13px 16px;
+            border-radius: 14px;
+            border: 2px solid var(--border);
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            background: #fff;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        input:focus {
+            border-color: var(--teal-light);
+            box-shadow: 0 0 0 4px rgba(20,184,166,.15);
+        }
+        input::placeholder { color: #9ca3af; }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--teal), var(--teal-light));
+            color: white;
+            box-shadow: 0 8px 24px rgba(13,148,136,.30);
+            margin-top: 8px;
+            transition: transform .15s, box-shadow .15s;
+        }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(13,148,136,.35); }
+        .btn:active { transform: translateY(0); }
+
+        .status {
+            margin-top: 14px;
+            font-size: 13px;
+            font-weight: 600;
+            min-height: 18px;
+            color: var(--muted-text);
+            text-align: center;
+        }
+        .status.err { color: var(--danger); }
+        .status.ok  { color: var(--ok); }
+
+        .divider {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: var(--muted-text);
+            font-weight: 600;
+        }
+        .divider a {
+            color: var(--teal);
+            font-weight: 800;
+            text-decoration: none;
+        }
+        .divider a:hover { text-decoration: underline; }
+
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 <div class="wrap">
     <div class="brand">
-        <div class="logo"></div>
+        <div class="logo-wrap">🌐</div>
         <h1>LangLink</h1>
-        <p>Meet people to practise languages nearby</p>
+        <p>Connect with language partners near you</p>
     </div>
+
     <div class="card">
-        <h2>Sign in to your account</h2>
-        <label for="email">Email address</label>
-        <input id="email" type="email" placeholder="you@example.com" autocomplete="email"/>
-        <label for="password">Password</label>
-        <input id="password" type="password" placeholder="••••••••" autocomplete="current-password"/>
-        <button class="btn" id="loginBtn">Sign in</button>
+        <h2>Welcome back</h2>
+
+        <div class="field">
+            <label for="email">Email address</label>
+            <input id="email" type="email" placeholder="you@example.com" autocomplete="email"/>
+        </div>
+
+        <div class="field">
+            <label for="password">Password</label>
+            <input id="password" type="password" placeholder="••••••••" autocomplete="current-password"/>
+        </div>
+
+        <button class="btn" id="loginBtn">Sign in to LangLink</button>
         <div class="status" id="status"></div>
     </div>
-    <div class="foot">
-        Don't have an account? <a href="/register.html">Create one</a>
+
+    <div class="divider">
+        Don't have an account? <a href="/register.html">Create one — it's free</a>
     </div>
 </div>
+
 <script>
     async function doLogin() {
         const st = document.getElementById('status');
-        st.textContent = '';
-        st.className = 'status';
+        st.textContent = ''; st.className = 'status';
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
         if (!email || !password) {
             st.textContent = 'Please enter your email and password.';
-            st.className = 'status err';
-            return;
+            st.className = 'status err'; return;
         }
+        st.textContent = 'Signing in…';
         try {
             const res = await fetch('/auth/login', {
                 method: 'POST',
@@ -94,22 +234,26 @@
             });
             const data = await res.json();
             if (!res.ok) {
-                st.textContent = data.error || 'Login failed. Please try again.';
-                st.className = 'status err';
-                return;
+                st.textContent = data.error || 'Incorrect email or password.';
+                st.className = 'status err'; return;
             }
-            // Redirect to dashboard
-            window.location.href = '/index.html';
+            st.textContent = 'Signed in! Loading your dashboard…';
+            st.className = 'status ok';
+            setTimeout(() => window.location.href = '/index.html', 800);
         } catch(e) {
             st.textContent = 'Could not connect. Please try again.';
             st.className = 'status err';
         }
     }
-
     document.getElementById('loginBtn').addEventListener('click', doLogin);
     document.getElementById('password').addEventListener('keydown', e => {
         if (e.key === 'Enter') doLogin();
     });
+
+    // Redirect if already logged in
+    fetch('/auth/me').then(r => {
+        if (r.ok) window.location.href = '/index.html';
+    }).catch(() => {});
 </script>
 </body>
 </html>

@@ -55,9 +55,10 @@ public class UserController {
     }
 
     // ── GET /users/me/matches ─────────────────────────────────────
-    // Find matches: language swap + optional location filter
+    // Find matches: language swap + optional location + optional proficiency filter
     @GetMapping("/me/matches")
     public ResponseEntity<?> findMatches(@RequestParam(required = false) String location,
+                                         @RequestParam(required = false) String proficiency,
                                          Authentication auth) {
         Optional<User> meOpt = resolveCurrentUser(auth);
         if (meOpt.isEmpty()) return ResponseEntity.status(401).build();
@@ -86,6 +87,15 @@ public class UserController {
                 String filterArea = location.trim().toLowerCase();
                 String userArea = u.getLocation() != null ? u.getLocation().toLowerCase() : "";
                 if (!userArea.contains(filterArea) && !filterArea.contains(userArea)) {
+                    continue;
+                }
+            }
+
+            // Optional proficiency filter: exact match (case-insensitive)
+            if (proficiency != null && !proficiency.isBlank()) {
+                String filterProf = proficiency.trim().toLowerCase();
+                String userProf = u.getProficiency() != null ? u.getProficiency().toLowerCase() : "";
+                if (!userProf.equals(filterProf)) {
                     continue;
                 }
             }

@@ -4,76 +4,228 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>LangLink – Create Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Lora:ital,wght@0,500;1,400&display=swap" rel="stylesheet"/>
     <style>
-        :root{
-            --bg:#fff7ef;--card:#ffffff;--text:#1f2937;--muted:#6b7280;
-            --border:#f1d2b7;--orange:#f97316;--orange2:#fb923c;
-            --danger:#b91c1c;--ok:#047857;
+        :root {
+            --teal:       #0d9488;
+            --teal-light: #14b8a6;
+            --teal-pale:  #ccfbf1;
+            --bg:         #f0fdfa;
+            --card:       #ffffff;
+            --text:       #134e4a;
+            --muted-text: #6b7280;
+            --border:     #99f6e4;
+            --danger:     #dc2626;
+            --ok:         #16a34a;
+            --blue:       #0ea5e9;
+            --shadow:     0 20px 60px rgba(13,148,136,.12);
         }
-        *{box-sizing:border-box}
-        body{
-            margin:0;
-            font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;
-            background:radial-gradient(1200px 600px at 15% 0%,rgba(249,115,22,.18),transparent 60%),
-            radial-gradient(1000px 600px at 90% 10%,rgba(251,146,60,.14),transparent 55%),
-            var(--bg);
-            color:var(--text);
-            min-height:100vh;
-            display:flex;align-items:flex-start;justify-content:center;padding:32px 16px;
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 32px 16px 48px;
+            position: relative;
+            overflow-x: hidden;
         }
-        .wrap{width:100%;max-width:480px;}
-        .brand{text-align:center;margin-bottom:24px;}
-        .logo{
-            width:52px;height:52px;border-radius:14px;margin:0 auto 12px;
-            background:linear-gradient(135deg,var(--orange),var(--orange2));
-            box-shadow:0 10px 24px rgba(249,115,22,.25);
+        body::before {
+            content: '';
+            position: fixed;
+            width: 700px; height: 700px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(20,184,166,.15) 0%, transparent 70%);
+            top: -250px; right: -200px;
+            pointer-events: none; z-index: 0;
         }
-        .brand h1{margin:0;font-size:28px;}
-        .brand p{margin:4px 0 0;color:var(--muted);font-size:13px;}
-        .card{
-            background:var(--card);border:1px solid var(--border);
-            border-radius:18px;box-shadow:0 10px 30px rgba(31,41,55,.10);padding:28px;
+
+        .wrap {
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            z-index: 1;
         }
-        .card h2{margin:0 0 6px;font-size:20px;}
-        .card .sub{margin:0 0 18px;color:var(--muted);font-size:13px;}
-        .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-        @media(max-width:480px){.grid2{grid-template-columns:1fr;}}
-        .field{margin-top:14px;}
-        label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;}
-        input,select,textarea{
-            width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);
-            outline:none;font-size:14px;background:#fff;font-family:inherit;
+
+        .brand {
+            text-align: center;
+            margin-bottom: 28px;
+            animation: fadeDown .6s ease both;
         }
-        textarea{resize:vertical;min-height:80px;}
-        input:focus,select:focus,textarea:focus{
-            border-color:rgba(249,115,22,.65);box-shadow:0 0 0 4px rgba(249,115,22,.12);
+        .logo-wrap {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px; height: 56px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, var(--teal), var(--blue));
+            box-shadow: 0 10px 28px rgba(13,148,136,.30);
+            margin-bottom: 12px;
+            font-size: 24px;
         }
-        .divider{height:1px;background:rgba(241,210,183,.8);margin:20px 0;}
-        button.btn{
-            width:100%;margin-top:22px;padding:13px;border:0;cursor:pointer;
-            border-radius:12px;font-weight:700;font-size:15px;
-            background:linear-gradient(135deg,var(--orange),var(--orange2));
-            color:white;box-shadow:0 10px 22px rgba(249,115,22,.22);
+        .brand h1 {
+            font-family: 'Lora', serif;
+            font-size: 28px;
+            font-weight: 500;
+            color: var(--text);
         }
-        .status{margin-top:12px;font-size:13px;color:var(--muted);min-height:18px;}
-        .status.err{color:var(--danger);}
-        .status.ok{color:var(--ok);font-weight:700;}
-        .foot{text-align:center;margin-top:16px;font-size:13px;color:var(--muted);}
-        .foot a{color:var(--orange);text-decoration:none;font-weight:600;}
-        .req{color:var(--orange);}
+        .brand p { font-size: 13px; color: var(--muted-text); margin-top: 3px; }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            padding: 32px 28px;
+            animation: fadeUp .6s .1s ease both;
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        .card-sub {
+            font-size: 13px;
+            color: var(--muted-text);
+            margin-bottom: 24px;
+        }
+
+        /* Section dividers */
+        .section-label {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--teal);
+            margin: 20px 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        @media(max-width: 480px) { .grid2 { grid-template-columns: 1fr; } }
+
+        .field { margin-bottom: 14px; }
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
+        .req { color: var(--teal); }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            background: #fff;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--teal-light);
+            box-shadow: 0 0 0 4px rgba(20,184,166,.15);
+        }
+        input::placeholder, textarea::placeholder { color: #9ca3af; }
+
+        /* Language pill hints */
+        .lang-hint {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        .lang-pill {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: var(--teal-pale);
+            color: var(--teal);
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: background .15s;
+        }
+        .lang-pill:hover { background: #a7f3d0; }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--teal), var(--teal-light));
+            color: white;
+            box-shadow: 0 8px 24px rgba(13,148,136,.28);
+            margin-top: 20px;
+            transition: transform .15s, box-shadow .15s;
+        }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(13,148,136,.33); }
+        .btn:active { transform: translateY(0); }
+
+        .status {
+            margin-top: 14px;
+            font-size: 13px;
+            font-weight: 600;
+            min-height: 18px;
+            color: var(--muted-text);
+            text-align: center;
+        }
+        .status.err { color: var(--danger); }
+        .status.ok  { color: var(--ok); }
+
+        .foot {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--muted-text);
+        }
+        .foot a { color: var(--teal); font-weight: 700; text-decoration: none; }
+        .foot a:hover { text-decoration: underline; }
+
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 <div class="wrap">
     <div class="brand">
-        <div class="logo"></div>
+        <div class="logo-wrap">🌐</div>
         <h1>LangLink</h1>
-        <p>Meet people to practise languages nearby</p>
+        <p>Find your language partner today</p>
     </div>
-    <div class="card">
-        <h2>Create your account</h2>
-        <p class="sub">Fields marked <span class="req">*</span> are required.</p>
 
+    <div class="card">
+        <div class="card-title">Create your account</div>
+        <div class="card-sub">Fields marked <span class="req">*</span> are required</div>
+
+        <div class="section-label">About you</div>
         <div class="grid2">
             <div class="field">
                 <label>Name <span class="req">*</span></label>
@@ -84,30 +236,39 @@
                 <input id="email" type="email" placeholder="you@example.com"/>
             </div>
         </div>
-
         <div class="field">
-            <label>Password <span class="req">*</span> <span style="font-weight:normal">(min. 6 characters)</span></label>
+            <label>Password <span class="req">*</span> <span style="font-weight:400;color:var(--muted-text)">(min. 6 characters)</span></label>
             <input id="password" type="password" placeholder="Choose a secure password"/>
         </div>
 
-        <div class="divider"></div>
-
+        <div class="section-label">Your languages</div>
         <div class="grid2">
             <div class="field">
-                <label>Native language <span class="req">*</span></label>
+                <label>I speak <span class="req">*</span></label>
                 <input id="nativeLanguage" placeholder="e.g. English"/>
+                <div class="lang-hint">
+                    <button class="lang-pill" onclick="setLang('nativeLanguage',this)">English</button>
+                    <button class="lang-pill" onclick="setLang('nativeLanguage',this)">Spanish</button>
+                    <button class="lang-pill" onclick="setLang('nativeLanguage',this)">French</button>
+                    <button class="lang-pill" onclick="setLang('nativeLanguage',this)">Mandarin</button>
+                </div>
             </div>
             <div class="field">
-                <label>Learning <span class="req">*</span></label>
+                <label>I'm learning <span class="req">*</span></label>
                 <input id="targetLanguage" placeholder="e.g. Spanish"/>
+                <div class="lang-hint">
+                    <button class="lang-pill" onclick="setLang('targetLanguage',this)">English</button>
+                    <button class="lang-pill" onclick="setLang('targetLanguage',this)">Spanish</button>
+                    <button class="lang-pill" onclick="setLang('targetLanguage',this)">French</button>
+                    <button class="lang-pill" onclick="setLang('targetLanguage',this)">Mandarin</button>
+                </div>
             </div>
         </div>
-
         <div class="grid2">
             <div class="field">
-                <label>Proficiency level</label>
+                <label>My level</label>
                 <select id="proficiency">
-                    <option value="">– Select –</option>
+                    <option value="">– Select level –</option>
                     <option>Beginner</option>
                     <option>Elementary</option>
                     <option>Intermediate</option>
@@ -121,23 +282,28 @@
             </div>
         </div>
 
+        <div class="section-label">About me <span style="font-weight:400;font-size:11px;text-transform:none;letter-spacing:0">(optional)</span></div>
         <div class="field">
-            <label>About you <span style="font-weight:normal">(optional bio)</span></label>
-            <textarea id="bio" placeholder="Tell people a bit about yourself and your language goals…"></textarea>
+            <textarea id="bio" placeholder="Tell potential partners about yourself and your language goals…"></textarea>
         </div>
 
-        <button class="btn" id="registerBtn">Create account</button>
+        <button class="btn" id="registerBtn">Create my account</button>
         <div class="status" id="status"></div>
     </div>
+
     <div class="foot">
         Already have an account? <a href="/login.html">Sign in</a>
     </div>
 </div>
+
 <script>
+    function setLang(fieldId, btn) {
+        document.getElementById(fieldId).value = btn.textContent;
+    }
+
     document.getElementById('registerBtn').addEventListener('click', async () => {
         const st = document.getElementById('status');
-        st.textContent = '';
-        st.className = 'status';
+        st.textContent = ''; st.className = 'status';
 
         const payload = {
             name:           document.getElementById('name').value.trim(),
@@ -150,13 +316,13 @@
             bio:            document.getElementById('bio').value.trim()
         };
 
-        // Client-side validation
-        if (!payload.name) { st.textContent = 'Please enter your name.'; st.className='status err'; return; }
-        if (!payload.email || !payload.email.includes('@')) { st.textContent = 'Please enter a valid email.'; st.className='status err'; return; }
+        if (!payload.name)           { st.textContent = 'Please enter your name.'; st.className='status err'; return; }
+        if (!payload.email || !payload.email.includes('@')) { st.textContent = 'Please enter a valid email address.'; st.className='status err'; return; }
         if (!payload.password || payload.password.length < 6) { st.textContent = 'Password must be at least 6 characters.'; st.className='status err'; return; }
-        if (!payload.nativeLanguage) { st.textContent = 'Please enter your native language.'; st.className='status err'; return; }
+        if (!payload.nativeLanguage) { st.textContent = 'Please enter the language you speak.'; st.className='status err'; return; }
         if (!payload.targetLanguage) { st.textContent = 'Please enter the language you are learning.'; st.className='status err'; return; }
 
+        st.textContent = 'Creating your account…';
         try {
             const res = await fetch('/auth/register', {
                 method: 'POST',
@@ -164,14 +330,10 @@
                 body: JSON.stringify(payload)
             });
             const data = await res.json();
-            if (!res.ok) {
-                st.textContent = data.error || 'Registration failed. Please try again.';
-                st.className = 'status err';
-                return;
-            }
-            st.textContent = 'Account created! Redirecting to sign in…';
+            if (!res.ok) { st.textContent = data.error || 'Registration failed. Please try again.'; st.className='status err'; return; }
+            st.textContent = '🎉 Account created! Taking you to sign in…';
             st.className = 'status ok';
-            setTimeout(() => window.location.href = '/login.html', 1500);
+            setTimeout(() => window.location.href = '/login.html', 1400);
         } catch(e) {
             st.textContent = 'Could not connect. Please try again.';
             st.className = 'status err';

@@ -13,4 +13,8 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
             "(m.fromUserId = :user2 AND m.toUserId = :user1) " +
             "ORDER BY m.createdAt ASC")
     List<Message> findConversation(@Param("user1") Long user1, @Param("user2") Long user2);
+
+    @Query("SELECT DISTINCT CASE WHEN m.fromUserId = :myId THEN m.toUserId ELSE m.fromUserId END " +
+            "FROM Message m WHERE m.fromUserId = :myId OR m.toUserId = :myId")
+    List<Long> findConversationPartnerIds(@Param("myId") Long myId);
 }

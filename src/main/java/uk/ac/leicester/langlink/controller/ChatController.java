@@ -25,6 +25,20 @@ public class ChatController {
         this.userRepository = userRepository;
     }
 
+    // ── GET /chat/conversations ───────────────────────────────────
+    // Returns all users the logged-in user has exchanged messages with
+    @GetMapping("/conversations")
+    public ResponseEntity<?> getConversations(Authentication auth) {
+        Optional<User> meOpt = resolveCurrentUser(auth);
+        if (meOpt.isEmpty()) return ResponseEntity.status(401).build();
+
+        Long myId = meOpt.get().getId();
+
+        List<Long> partnerIds = messageRepository.findConversationPartnerIds(myId);
+        List<User> partners = userRepository.findAllById(partnerIds);
+        return ResponseEntity.ok(partners);
+    }
+
     // ── GET /chat/conversation?withUserId=5 ───────────────────────
     // Only accessible by the two participants — logged-in user is always one of them
     @GetMapping("/conversation")
@@ -87,4 +101,3 @@ public class ChatController {
         public String content;
     }
 }
-
