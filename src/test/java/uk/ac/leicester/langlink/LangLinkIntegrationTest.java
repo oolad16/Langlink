@@ -113,7 +113,7 @@ public class LangLinkIntegrationTest {
                 .andExpect(jsonPath("$.location").value("Manchester"));
     }
 
-    // ── Test 5: Language matching ─────────────────────────────────
+    // ── Test 5: Language matching
     @Test
     void testLanguageMatching() throws Exception {
         MockHttpSession aliceSession = registerAndLogin(
